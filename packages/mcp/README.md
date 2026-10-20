@@ -25,8 +25,8 @@ Servidor **MCP (Model Context Protocol) read-only** para que asistentes IA
 ## Configuración
 
 ```bash
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
 
 Claude Desktop (`claude_desktop_config.json`):

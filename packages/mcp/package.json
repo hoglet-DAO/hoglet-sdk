@@ -1,30 +1,34 @@
-{
-  "name": "@hoglet/mcp-server",
-  "version": "0.2.0",
-  "description": "Hoglet ecosystem MCP server (read-only) — DAOs, trading phases, bonding curves, gauges and AMM quotes on Supra",
-  "type": "module",
-  "main": "dist/index.js",
-  "bin": {
-    "hoglet-mcp": "dist/index.js"
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
-  "license": "MIT",
-  "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js",
-    "smoke": "node smoke-test.mjs"
-  },
-  "dependencies": {
-    "@hoglet/core": "0.1.0",
-    "@modelcontextprotocol/sdk": "^1.12.0",
-    "zod": "^3.24.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.0.0",
-    "typescript": "^5.5.0"
-  }
+﻿{
+    "name":  "@hoglet/mcp-server",
+    "version":  "0.2.0",
+    "description":  "Hoglet ecosystem MCP server (read-only) â€” DAOs, trading phases, bonding curves, gauges and AMM quotes on Supra",
+    "type":  "module",
+    "main":  "dist/index.js",
+    "bin":  {
+                "hoglet-mcp":  "dist/index.js"
+            },
+    "files":  [
+                  "dist",
+                  "README.md",
+                  "LICENSE"
+              ],
+    "license":  "MIT",
+    "scripts":  {
+                    "build":  "tsc -p tsconfig.json",
+                    "start":  "node dist/index.js",
+                    "smoke":  "node smoke-test.mjs",
+                    "prepublishOnly":  "tsc -p tsconfig.json"
+                },
+    "dependencies":  {
+                         "@hoglet/core":  "workspace:*",
+                         "@modelcontextprotocol/sdk":  "^1.12.0",
+                         "zod":  "^3.24.0"
+                     },
+    "devDependencies":  {
+                            "@types/node":  "^22.0.0",
+                            "typescript":  "^5.5.0"
+                        },
+    "publishConfig":  {
+                          "access":  "public"
+                      }
 }

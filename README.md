@@ -41,11 +41,11 @@ Solo cambian los endpoints por red:
 ## Uso
 
 ```bash
-npm install
-npm run build
-npm run smoke                 # testnet por defecto
-$env:HOGLET_NETWORK="mainnet"; npm run smoke
-npm run smoke:launcher        # integración real con un token lanzado (SPACE)
+pnpm install
+pnpm run build
+pnpm run smoke                 # testnet por defecto
+$env:HOGLET_NETWORK="mainnet"; pnpm run smoke
+pnpm run smoke:launcher        # integración real con un token lanzado (SPACE)
 ```
 
 Variables: `HOGLET_NETWORK` (`testnet`|`mainnet`), `HOGLET_RPC_URL`, `HOGLET_RPC_V1`,
