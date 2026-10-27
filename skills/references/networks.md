@@ -2,9 +2,9 @@
 
 ## Canonical versions
 
-- `@hoglet/core@0.2.1`
-- `@hoglet/sdk@0.2.2`
-- `@hoglet/mcp-server@0.3.1`
+- `@hoglet/core@0.2.3`
+- `@hoglet/sdk@0.2.4`
+- `@hoglet/mcp-server@0.3.3`
 
 ## Networks
 
@@ -26,7 +26,7 @@ Use `resolveConfig({ network })` from `@hoglet/core` rather than hardcoding endp
 ## MCP environment
 
 ```bash
-HOGLET_NETWORK=mainnet npx -y @hoglet/mcp-server@0.3.1
+HOGLET_NETWORK=mainnet npx -y @hoglet/mcp-server@0.3.3
 ```
 
 The default MCP network is testnet.

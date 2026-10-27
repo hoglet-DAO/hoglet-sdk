@@ -4,8 +4,8 @@ Ready-to-download skills for AI agents working with Hoglet on Supra.
 
 These skills are orchestration guides. They do not sign transactions or hold keys. They use:
 
-- `@hoglet/mcp-server@0.3.1` for read-only data.
-- `@hoglet/core@0.2.1` and `@hoglet/sdk@0.2.2` for unsigned payloads.
+- `@hoglet/mcp-server@0.3.3` for read-only data.
+- `@hoglet/core@0.2.3` and `@hoglet/sdk@0.2.4` for unsigned payloads.
 - A wallet or backend signer for signing and submission.
 
 ## Included skills
@@ -53,8 +53,8 @@ Each skill is a `SKILL.md` with YAML frontmatter. The skills reference the share
 ## Prerequisites
 
 ```bash
-npm install @hoglet/core@0.2.1 @hoglet/sdk@0.2.2
-npx -y @hoglet/mcp-server@0.3.1
+npm install @hoglet/core@0.2.3 @hoglet/sdk@0.2.4
+npx -y @hoglet/mcp-server@0.3.3
 ```
 
 For the MCP server, set `HOGLET_NETWORK=mainnet` for mainnet. Testnet is the default.
