@@ -1,6 +1,6 @@
 {
     "name":  "@hoglet/sdk",
-    "version":  "0.2.3",
+    "version":  "0.2.4",
     "description":  "Hoglet transaction builders (launcher, AMM, farm, vault, multisig, zap, governance). Signer-agnostic: never signs.",
     "homepage": "https://hoglet.xyz",
     "repository": {

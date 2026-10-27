@@ -1,6 +1,6 @@
 {
     "name":  "@hoglet/mcp-server",
-    "version":  "0.3.2",
+    "version":  "0.3.3",
     "description":  "Hoglet ecosystem MCP server (read-only) - DAOs, trading phases, bonding curves, gauges and AMM quotes on Supra",
     "homepage": "https://hoglet.xyz",
     "repository": {
