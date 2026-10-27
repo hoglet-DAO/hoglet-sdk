@@ -1,6 +1,6 @@
 {
     "name":  "@hoglet/core",
-    "version":  "0.2.1",
+    "version":  "0.2.2",
     "description":  "Hoglet shared addresses, network config, RPC clients and read helpers (Supra)",
     "homepage": "https://hoglet.xyz",
     "repository": {
