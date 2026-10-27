@@ -77,6 +77,99 @@ export interface AmmQuote {
   warning?: string;
 }
 
+export interface AmmReserves {
+  tokenA: string;
+  tokenB: string;
+  reserveARaw: string;
+  reserveBRaw: string;
+}
+
+export interface AmmPairInfo {
+  tokenA: string;
+  tokenB: string;
+  pairAddress: string | null;
+}
+
+export interface FarmPoolInfo {
+  creator: string;
+  stakeToken: string;
+  rewardToken: string;
+  exists: boolean;
+  finished: boolean;
+  rewardPerSecRaw: string;
+  startTimestamp: number;
+  endTimestamp: number;
+  totalStakedRaw: string;
+  totalBoostedRaw: string;
+}
+
+export interface FarmPosition {
+  creator: string;
+  stakeToken: string;
+  rewardToken: string;
+  user: string;
+  stakedRaw: string;
+  pendingRewardsRaw: string;
+  boostedRaw: string;
+  isBoosted: boolean;
+}
+
+export interface MultisigAccountInfo {
+  address: string;
+  exists: boolean;
+  owners: string[];
+  threshold: number;
+  timeoutSeconds: number;
+  nextSequenceNumber: number;
+  lastResolvedSequenceNumber: number;
+  metadata: Record<string, string>;
+}
+
+export interface MultisigVote {
+  owner: string;
+  approved: boolean;
+}
+
+export interface MultisigTransactionInfo {
+  sequenceNumber: number;
+  creator: string;
+  creationTimeSecs: number;
+  payload: string | null;
+  payloadHash: string | null;
+  approvals: number;
+  rejections: number;
+  votes: MultisigVote[];
+}
+
+export interface MultisigConfig {
+  admin: string;
+  creationFeeRaw: string;
+  treasury: string;
+}
+
+export interface LegacyMultisigDetails {
+  id: number;
+  participants: string[];
+  name: string;
+  approvalThreshold: number;
+  cancellationThreshold: number;
+  address: string;
+}
+
+export interface LegacyProposalDetails {
+  proposalId: number;
+  creator: string;
+  posted: boolean;
+  approvalVotes: number;
+  cancellationVotes: number;
+  addParticipants: string[];
+  removeParticipants: string[];
+  withdrawTokens: unknown[];
+  withdrawFAs: unknown[];
+  withdrawCoins: unknown[];
+  withdrawDigitalAssets: unknown[];
+}
+
 export interface EpochInfo {
   currentEpoch: number;
   nextEpochStartUnix: number;
@@ -89,13 +182,19 @@ export interface ApiDao {
   id?: string;
   daoAddress: string;
   tokenAddress?: string | null;
+  assetAddress?: string | null;
+  nativeAssetAddress?: string | null;
   creatorAddress?: string;
   name?: string;
   symbol?: string;
   description?: string;
+  imageUrl?: string | null;
   createdAt?: string;
   totalValueLocked?: string;
+  stakedTvl?: string;
+  apr?: string | null;
   isPaused?: boolean;
+  isInflationary?: boolean;
   isVerified?: boolean;
   is_verified?: boolean;
 }
@@ -140,3 +239,65 @@ export interface VeInfo {
   endEpoch: string;
   isDelegated: boolean;
 }
+
+export interface CurveSellQuote {
+  quoteOutRaw: string;
+  metadata: TokenMetadata | null;
+}
+
+/** `hoglet_core::get_current_price` returns quote raw units scaled by 1e8. */
+export interface CurvePrice {
+  tokenAddress: string;
+  priceRaw: string;
+  price: string;
+}
+
+export interface UserStakeInfo {
+  tokenAddress: string;
+  user: string;
+  unlockedRaw: string;
+  stakedRaw: string;
+}
+
+export interface HodlPoolStats {
+  tokenAddress: string;
+  totalStakedRaw: string;
+  totalSupplyRaw: string;
+}
+
+export type VaultSecurityStatus =
+  | "unmanaged"
+  | "permanently_renounced"
+  | "dao_governed"
+  | "hazard_key_still_active"
+  | "unknown";
+
+/**
+ * Aggregated control report for an address managed by `dao_contracts_vault`.
+ *
+ * `isRenounced` only means a factory tombstone exists. Authoritative
+ * immutability is `isCryptographicallyFrozen` / `isPermanentlyImmutable`.
+ */
+export interface ContractControl {
+  contractAddress: string;
+  isFactoryManaged: boolean;
+  isRenounced: boolean;
+  isCryptographicallyFrozen: boolean;
+  isPermanentlyImmutable: boolean;
+  isKeyAnnihilated: boolean;
+  isEoa: boolean;
+  admin: string | null;
+  creator: string | null;
+  eoaProxy: string | null;
+  securityStatus: VaultSecurityStatus;
+  note: string;
+}
+
+export interface ManagedContractItem {
+  contractAddress: string;
+  creator: string;
+  admin: string;
+  isResourceAccount: boolean;
+  isRenounced: boolean;
+}
+

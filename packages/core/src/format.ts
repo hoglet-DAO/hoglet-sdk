@@ -44,3 +44,18 @@ export function asBigInt(value: unknown): bigint {
   }
   throw new Error(`Cannot convert to bigint: ${String(value)}`);
 }
+
+/**
+ * Encodes a UTF-8 string (or raw bytes) as a 0x-prefixed hex string, the wire
+ * format Supra expects for `vector<u8>` arguments and view parameters.
+ */
+export function toBytesHex(value: string | Uint8Array): string {
+  const bytes =
+    typeof value === "string" ? new TextEncoder().encode(value) : value;
+  return `0x${Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
+}
+
+/** Encodes a list of byte vectors (`vector<vector<u8>>`, e.g. package modules). */
+export function toBytesHexList(values: Array<string | Uint8Array>): string[] {
+  return values.map(toBytesHex);
+}

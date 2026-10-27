@@ -28,5 +28,36 @@ const payload = tx.createDaoStatic("0x<token-metadata>");
 ## Alcance v1
 
 Incluye creación estática, locks, propuestas, votación, ejecución, rewards,
-bribes, gauges y boosts. **No incluye** compra en curva, migración, swaps AMM
-ni `dao_zap` (v1.1).
+bribes, gauges, boosts, **launcher** (`deployToken`, `buyCurveTokens`,
+`sellCurveTokens`, `buyCurveTokensExact`, `migrateToAmm`, `stakeLaunchedToken`,
+`unstakeLaunchedToken`, `harvestLaunchedToken`, `activateDelayedDao`),
+**vault** (`deployAutonomousContract`, `upgradeContract`,
+`transferContractAdmin`, `renounceContract`, `donateEoaToDao`,
+`cancelEoaDelegation`), **AMM** (`swapExactTokensForTokens`,
+`swapTokensForExactTokens`, `addLiquidity`, `addLiquiditySupra`,
+`removeLiquidity`, `removeLiquiditySupra`, `wrapSupra`) y **farm staking**
+(`stakeFarm`, `unstakeFarm`, `harvestFarm`, `registerFarmPool`,
+`depositFarmRewards`, `boostFarm`, `removeFarmBoost`).
+
+**Multisig v2** (nativo `0x1::multisig_account` + registry de Hoglet):
+`createMultisig`, `importMultisig`, `removeMultisig`,
+`createMultisigTransaction`, `approveMultisigTransaction`,
+`rejectMultisigTransaction`, `voteMultisigTransaction` y los payloads
+self-governed (`addMultisigOwners`, `updateMultisigSignaturesRequired`, …).
+La **ejecución** no es una entry function en este deployment: se envía el
+payload guardado como transacción multisig multi-ed25519 (lo firma la wallet/bot).
+El multisig legacy solo se lee, no se construyen transacciones nuevas.
+
+**Zap** (`dao_router::dao_zap`): `buyAndLockFas` (paga con cualquier FA) y
+`buyAndLockCoin` (paga con un Coin nativo) compran y lockean en una sola tx.
+
+**Scripts y boosts de colección**: `submitScript`, `approveScript`,
+`removeScriptApproval` (`dao_scripts`) y `setCollectionBoost`,
+`removeCollectionBoost` (`dao_boost`).
+
+**Treasury/Coin**: `wrapDaoCoin(dao, coinType)` (`dao_factory::anchor::wrap`,
+live on mainnet) y `proposeTreasuryTransferCoin(...)` con type argument
+(`dao_proposals::propose_treasury_transfer_coin`; verifica que esté desplegado
+antes de usarlo).
+
+El SDK nunca firma ni custodia llaves: devuelve el payload para tu wallet o bot.

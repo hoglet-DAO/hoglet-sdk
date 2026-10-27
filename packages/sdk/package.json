@@ -1,7 +1,16 @@
-﻿{
+{
     "name":  "@hoglet/sdk",
-    "version":  "0.1.0",
-    "description":  "Hoglet transaction builders (governance, locks, proposals, gauges). Signer-agnostic: never signs.",
+    "version":  "0.2.2",
+    "description":  "Hoglet transaction builders (launcher, AMM, farm, vault, multisig, zap, governance). Signer-agnostic: never signs.",
+    "homepage": "https://hoglet.xyz",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hoglet-xyz/hoglet-sdk.git",
+        "directory": "packages/sdk"
+    },
+    "bugs": {
+        "url": "https://github.com/hoglet-xyz/hoglet-sdk/issues"
+    },
     "type":  "module",
     "main":  "dist/index.js",
     "types":  "dist/index.d.ts",
@@ -19,8 +28,10 @@
               ],
     "license":  "Apache-2.0",
     "scripts":  {
-                    "build":  "tsc -p tsconfig.json",
-                    "prepublishOnly":  "tsc -p tsconfig.json"
+                    "clean":  "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+                    "build":  "pnpm run clean && tsc -p tsconfig.json",
+                    "test":  "node --test test/builders.test.mjs",
+                    "prepublishOnly":  "pnpm run build"
                 },
     "dependencies":  {
                          "@hoglet/core":  "workspace:*"
@@ -29,6 +40,9 @@
                             "@types/node":  "^22.0.0",
                             "typescript":  "^5.5.0"
                         },
+    "engines":  {
+                    "node":  ">=18.17"
+                },
     "publishConfig":  {
                           "access":  "public"
                       }

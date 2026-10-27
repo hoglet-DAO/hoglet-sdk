@@ -1,7 +1,16 @@
-﻿{
+{
     "name":  "@hoglet/mcp-server",
-    "version":  "0.2.0",
-    "description":  "Hoglet ecosystem MCP server (read-only) â€” DAOs, trading phases, bonding curves, gauges and AMM quotes on Supra",
+    "version":  "0.3.1",
+    "description":  "Hoglet ecosystem MCP server (read-only) - DAOs, trading phases, bonding curves, gauges and AMM quotes on Supra",
+    "homepage": "https://hoglet.xyz",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hoglet-xyz/hoglet-sdk.git",
+        "directory": "packages/mcp"
+    },
+    "bugs": {
+        "url": "https://github.com/hoglet-xyz/hoglet-sdk/issues"
+    },
     "type":  "module",
     "main":  "dist/index.js",
     "bin":  {
@@ -14,10 +23,11 @@
               ],
     "license":  "MIT",
     "scripts":  {
-                    "build":  "tsc -p tsconfig.json",
+                    "clean":  "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+                    "build":  "pnpm run clean && tsc -p tsconfig.json",
                     "start":  "node dist/index.js",
                     "smoke":  "node smoke-test.mjs",
-                    "prepublishOnly":  "tsc -p tsconfig.json"
+                    "prepublishOnly":  "pnpm run build"
                 },
     "dependencies":  {
                          "@hoglet/core":  "workspace:*",
@@ -28,6 +38,9 @@
                             "@types/node":  "^22.0.0",
                             "typescript":  "^5.5.0"
                         },
+    "engines":  {
+                    "node":  ">=18.17"
+                },
     "publishConfig":  {
                           "access":  "public"
                       }

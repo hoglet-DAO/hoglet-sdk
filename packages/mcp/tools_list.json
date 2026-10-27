@@ -1,0 +1,1047 @@
+{
+  "tools": [
+    {
+      "name": "list_daos",
+      "description": "List DAOs registered in the Hoglet index, with optional search, sort and pagination. Includes network metadata.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "description": "Name or symbol fragment"
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "Only verified DAOs"
+          },
+          "sort": {
+            "type": "enum",
+            "description": "Default tvl"
+          },
+          "order": {
+            "type": "enum",
+            "description": "Default desc"
+          },
+          "page": {
+            "type": "number",
+            "description": "Page (default 1)"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Page size (default 12)"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_dao_proposals",
+      "description": "Indexed proposal history for a DAO (status, votes, metadata URI). Historical data lives off-chain; on-chain reads remain authoritative for live state.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "daoAddress": {
+            "type": "string",
+            "description": "DAO account address"
+          }
+        },
+        "required": [
+          "daoAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_proposal_comments",
+      "description": "Off-chain comments for a proposal id.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "proposalId": {
+            "type": "string",
+            "description": "Indexed proposal id (UUID)"
+          }
+        },
+        "required": [
+          "proposalId"
+        ]
+      }
+    },
+    {
+      "name": "get_dao",
+      "description": "Resolve a governance token to its DAO and return on-chain metadata plus curatorship/blessing status.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "Governance token FA metadata address"
+          }
+        },
+        "required": [
+          "tokenAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_dao_status",
+      "description": "Governance status of a DAO: active, blessed, inflationary, guardian and factory curator. Explains what is blocked while under curatorship.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "daoAddress": {
+            "type": "string",
+            "description": "DAO account address"
+          }
+        },
+        "required": [
+          "daoAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_gauges",
+      "description": "List a DAO's emission gauges with their staking token, votes and active state (inactive gauges reject votes).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "daoAddress": {
+            "type": "string",
+            "description": "DAO account address"
+          },
+          "epoch": {
+            "type": "number",
+            "description": "Epoch to read votes for (default: current)"
+          }
+        },
+        "required": [
+          "daoAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_gauge_active",
+      "description": "Whether a gauge can receive votes/emissions. Birth-inactive gauges reject votes on-chain.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "daoAddress": {
+            "type": "string",
+            "description": "DAO account address"
+          },
+          "gaugeId": {
+            "type": "number",
+            "description": "Sequential gauge id"
+          }
+        },
+        "required": [
+          "daoAddress",
+          "gaugeId"
+        ]
+      }
+    },
+    {
+      "name": "get_epoch_info",
+      "description": "Current Hoglet voting epoch (7-day epochs) and the final-24h voting lockout.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "get_token_metadata",
+      "description": "Resolve an FA token's symbol, name, decimals and icon. Accepts Metadata or FungibleStore addresses.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "faAddress": {
+            "type": "string",
+            "description": "FA metadata address or FungibleStore address"
+          }
+        },
+        "required": [
+          "faAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_trading_phase",
+      "description": "Trading phase for a token: curve | migrating | amm | governance-only | unknown. Static DAOs are reported as governance-only.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "Governance token FA metadata address"
+          }
+        },
+        "required": [
+          "tokenAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_curve_progress",
+      "description": "Bonding-curve progress: quote token raised vs target threshold plus completion percentage (quote token may not be SUPRA).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "Governance token FA metadata address"
+          }
+        },
+        "required": [
+          "tokenAddress"
+        ]
+      }
+    },
+    {
+      "name": "quote_curve_buy",
+      "description": "Quote how many governance tokens a quote-token amount buys on the bonding curve (pre-migration only).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "Governance token FA metadata address"
+          },
+          "quoteAmount": {
+            "type": "number",
+            "description": "Amount of the pool quote token to spend, human units (e.g. 12.5)"
+          }
+        },
+        "required": [
+          "tokenAddress",
+          "quoteAmount"
+        ]
+      }
+    },
+    {
+      "name": "quote_amm_buy",
+      "description": "Quote a post-migration AMM swap, including price impact vs the 1-unit reference rate (warn -10%, critical -25%).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "outputToken": {
+            "type": "string",
+            "description": "FA metadata address of the token you want"
+          },
+          "amountIn": {
+            "type": "number",
+            "description": "Input amount in human units"
+          },
+          "inputToken": {
+            "type": "string",
+            "description": "FA metadata paid (defaults to WSUP, the AMM wrapper side)"
+          }
+        },
+        "required": [
+          "outputToken",
+          "amountIn"
+        ]
+      }
+    },
+    {
+      "name": "get_curve_price",
+      "description": "Current bonding-curve spot price (quote per whole token) for a launched token.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "Launched token metadata address"
+          }
+        },
+        "required": [
+          "tokenAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_hodl_stake",
+      "description": "HODL staking position of a user in a launched token, plus pool totals (staked vs supply).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "Launched token metadata address"
+          },
+          "userAddress": {
+            "type": "string",
+            "description": "User address"
+          }
+        },
+        "required": [
+          "tokenAddress",
+          "userAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_contract_control",
+      "description": "Who controls a deployed contract (dao_contracts_vault): admin, creator, EOA proxy, renouncement and cryptographic freeze status. Use this instead of treating a tombstone as immutable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "contractAddress": {
+            "type": "string",
+            "description": "Published package / managed account address"
+          }
+        },
+        "required": [
+          "contractAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_eoa_security_status",
+      "description": "Security status of an EOA per the vault: unmanaged, permanently_renounced, dao_governed or hazard_key_still_active (renounce NOT effective).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "eoaAddress": {
+            "type": "string",
+            "description": "Externally owned account address"
+          }
+        },
+        "required": [
+          "eoaAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_creator_contracts",
+      "description": "Contracts deployed or donated by a creator, as recorded in the vault catalog.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "creatorAddress": {
+            "type": "string",
+            "description": "Creator address"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Max entries (default 50)"
+          }
+        },
+        "required": [
+          "creatorAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_vault_contracts",
+      "description": "Paginated public catalog of contracts managed by dao_contracts_vault (capped at 50 per page).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "number",
+            "description": "Start index (default 0)"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Page size (default 50)"
+          }
+        }
+      }
+    },
+    {
+      "name": "predict_contract_address",
+      "description": "Deterministic address the vault will publish to for a (creator, label) pair. Read-only derivation; no deployment.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "creatorAddress": {
+            "type": "string",
+            "description": "Creator address"
+          },
+          "label": {
+            "type": "string",
+            "description": "Package label (1..=64 UTF-8 bytes)"
+          }
+        },
+        "required": [
+          "creatorAddress",
+          "label"
+        ]
+      }
+    },
+    {
+      "name": "list_tokens",
+      "description": "Indexed tokens with current USD price and verification status (api.hoglet.xyz). Indexer data can lag on-chain state.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "description": "Name, symbol or exact id"
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "Only verified tokens"
+          },
+          "page": {
+            "type": "number",
+            "description": "Page (default 1)"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Page size (default 20)"
+          }
+        }
+      }
+    },
+    {
+      "name": "list_amm_pairs",
+      "description": "Indexed AMM pairs with TVL, 24h volume and APR (api.hoglet.xyz).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "description": "Pair id or token symbols"
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "Only verified pairs"
+          },
+          "token0": {
+            "type": "string",
+            "description": "Exact token0 id"
+          },
+          "token1": {
+            "type": "string",
+            "description": "Exact token1 id"
+          },
+          "sortBy": {
+            "type": "enum",
+            "description": "Sort key"
+          },
+          "sortOrder": {
+            "type": "enum",
+            "description": ""
+          },
+          "page": {
+            "type": "number",
+            "description": ""
+          },
+          "limit": {
+            "type": "number",
+            "description": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "list_staking_pools",
+      "description": "Indexed staking/farming pools with APY, TVL and reward rate (api.hoglet.xyz).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "description": "Pool id, creator or token symbols"
+          },
+          "verified": {
+            "type": "boolean",
+            "description": ""
+          },
+          "poolType": {
+            "type": "string",
+            "description": "e.g. MEME, farm"
+          },
+          "status": {
+            "type": "enum",
+            "description": ""
+          },
+          "page": {
+            "type": "number",
+            "description": ""
+          },
+          "limit": {
+            "type": "number",
+            "description": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "get_ai_metrics",
+      "description": "Flattened metrics for active AMM pairs and staking pools, optimized for LLM contexts (api.hoglet.xyz).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "list_launch_projects",
+      "description": "Indexed launchpad projects (launch.hoglet.xyz): name, symbol, token address, creator and project type.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "description": "Name, symbol or token address"
+          },
+          "projectType": {
+            "type": "string",
+            "description": "e.g. Meme, BIG_DAO"
+          },
+          "page": {
+            "type": "number",
+            "description": ""
+          },
+          "limit": {
+            "type": "number",
+            "description": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "get_launch_project",
+      "description": "Indexed metadata for one launchpad token, with an on-chain name/symbol fallback when it is not indexed yet.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "Launched token metadata address"
+          }
+        },
+        "required": [
+          "tokenAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_token_holders",
+      "description": "Top holders of an indexed token with pagination (launch.hoglet.xyz). May be empty for tokens not yet indexed.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "Token metadata address"
+          },
+          "page": {
+            "type": "number",
+            "description": ""
+          },
+          "limit": {
+            "type": "number",
+            "description": ""
+          }
+        },
+        "required": [
+          "tokenAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_ohlc",
+      "description": "OHLC candles for a token from the Hoglet charts API (1m..1d).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "Token metadata address"
+          },
+          "resolution": {
+            "type": "enum",
+            "description": "Default 1h"
+          }
+        },
+        "required": [
+          "tokenAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_swap_path",
+      "description": "Best AMM route between two tokens (possibly multi-hop) from the swap app's pool graph. Use it before quoting/executing a swap.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenIn": {
+            "type": "string",
+            "description": "FA metadata address paid"
+          },
+          "tokenOut": {
+            "type": "string",
+            "description": "FA metadata address received"
+          },
+          "amount": {
+            "type": "string",
+            "description": "Raw amount (base units) for the dust/liquidity heuristic"
+          },
+          "exactOut": {
+            "type": "boolean",
+            "description": "True when `amount` is the exact output"
+          }
+        },
+        "required": [
+          "tokenIn",
+          "tokenOut"
+        ]
+      }
+    },
+    {
+      "name": "get_protocol_stats",
+      "description": "Latest protocol-wide metrics: total/AMM/staking TVL, 24h volume and fees (swap.hoglet.xyz).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "get_protocol_stats_history",
+      "description": "Historical protocol-wide metrics, newest last (swap.hoglet.xyz).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "number",
+            "description": "Default 30"
+          },
+          "orderDirection": {
+            "type": "enum",
+            "description": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "quote_amm_exact_out",
+      "description": "Quote the input needed for an exact AMM output amount (get_amounts_in), with price impact.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "outputToken": {
+            "type": "string",
+            "description": "FA metadata address you want to receive"
+          },
+          "amountOut": {
+            "type": "string",
+            "description": "Exact output amount in raw base units"
+          },
+          "inputToken": {
+            "type": "string",
+            "description": "FA metadata paid (defaults to WSUP)"
+          }
+        },
+        "required": [
+          "outputToken",
+          "amountOut"
+        ]
+      }
+    },
+    {
+      "name": "quote_amm_path",
+      "description": "Quote an exact-input swap along a given multi-hop path (use get_swap_path first).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "array",
+            "description": "FA metadata addresses from input to output"
+          },
+          "amountIn": {
+            "type": "string",
+            "description": "Input amount in raw base units"
+          }
+        },
+        "required": [
+          "path",
+          "amountIn"
+        ]
+      }
+    },
+    {
+      "name": "get_amm_reserves",
+      "description": "On-chain reserves for a token pair (factory::get_reserves).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenA": {
+            "type": "string",
+            "description": "First FA metadata address"
+          },
+          "tokenB": {
+            "type": "string",
+            "description": "Second FA metadata address"
+          }
+        },
+        "required": [
+          "tokenA",
+          "tokenB"
+        ]
+      }
+    },
+    {
+      "name": "get_amm_pair",
+      "description": "Resolve the on-chain pair address for two tokens (null when no pool exists).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenA": {
+            "type": "string",
+            "description": "First FA metadata address"
+          },
+          "tokenB": {
+            "type": "string",
+            "description": "Second FA metadata address"
+          }
+        },
+        "required": [
+          "tokenA",
+          "tokenB"
+        ]
+      }
+    },
+    {
+      "name": "get_farm_pool",
+      "description": "On-chain swap-farm pool: exists, rewards per second, window, total staked and boosted.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "creator": {
+            "type": "string",
+            "description": "Address that registered the pool"
+          },
+          "stakeToken": {
+            "type": "string",
+            "description": "Staked FA metadata address"
+          },
+          "rewardToken": {
+            "type": "string",
+            "description": "Reward FA metadata address"
+          }
+        },
+        "required": [
+          "creator",
+          "stakeToken",
+          "rewardToken"
+        ]
+      }
+    },
+    {
+      "name": "get_farm_position",
+      "description": "User position in a swap-farm pool: staked, pending rewards, boost amount and boost flag.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "creator": {
+            "type": "string",
+            "description": "Address that registered the pool"
+          },
+          "stakeToken": {
+            "type": "string",
+            "description": "Staked FA metadata address"
+          },
+          "rewardToken": {
+            "type": "string",
+            "description": "Reward FA metadata address"
+          },
+          "user": {
+            "type": "string",
+            "description": "User address"
+          }
+        },
+        "required": [
+          "creator",
+          "stakeToken",
+          "rewardToken",
+          "user"
+        ]
+      }
+    },
+    {
+      "name": "get_multisig",
+      "description": "Native Supra multisig (v2): owners, signature threshold, timeout and sequence numbers. Use get_multisig_pending for the queue.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "multisigAddress": {
+            "type": "string",
+            "description": "Multisig account address"
+          }
+        },
+        "required": [
+          "multisigAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_user_multisigs",
+      "description": "Multisigs registered to a user in the v2 registry.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "description": "User address"
+          }
+        },
+        "required": [
+          "user"
+        ]
+      }
+    },
+    {
+      "name": "get_multisig_pending",
+      "description": "Pending v2 multisig transactions with approvals/rejections and the stored payload (execution is a multi-ed25519 multisig transaction, not an entry function).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "multisigAddress": {
+            "type": "string",
+            "description": "Multisig account address"
+          }
+        },
+        "required": [
+          "multisigAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_multisig_config",
+      "description": "V2 registry/admin config: admin, creation fee (raw) and treasury address.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "predict_multisig_address",
+      "description": "Address of the next native multisig that a creator would deploy.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "creator": {
+            "type": "string",
+            "description": "Creator address"
+          }
+        },
+        "required": [
+          "creator"
+        ]
+      }
+    },
+    {
+      "name": "is_multisig_owner",
+      "description": "Whether an address is an owner of a given multisig (useful for contract-control checks).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "description": "Address to check"
+          },
+          "multisigAddress": {
+            "type": "string",
+            "description": "Multisig account address"
+          }
+        },
+        "required": [
+          "user",
+          "multisigAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_legacy_multisigs",
+      "description": "Legacy (custom) multisigs for a user. Read-only compatibility; new wallets use v2.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "description": "User address"
+          }
+        },
+        "required": [
+          "user"
+        ]
+      }
+    },
+    {
+      "name": "get_legacy_multisig_proposals",
+      "description": "Pending proposals of a legacy multisig (participants, withdrawals). Read-only.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "multisigId": {
+            "type": "number",
+            "description": "Legacy multisig id"
+          }
+        },
+        "required": [
+          "multisigId"
+        ]
+      }
+    },
+    {
+      "name": "get_wrapped_collection_address",
+      "description": "Deterministic DA collection address for a V1 NFT collection wrapped by the Hoglet NFT wrapper.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "creator": {
+            "type": "string",
+            "description": "V1 collection creator address"
+          },
+          "collectionName": {
+            "type": "string",
+            "description": "V1 collection name"
+          }
+        },
+        "required": [
+          "creator",
+          "collectionName"
+        ]
+      }
+    },
+    {
+      "name": "is_nft_wrapped",
+      "description": "Whether a DA token address was minted by the Hoglet V1→DA NFT wrapper.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "DA token object address"
+          }
+        },
+        "required": [
+          "tokenAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_collection_boost",
+      "description": "Boost (bps) configured for an NFT collection in a DAO (dao_boost registry).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "daoAddress": {
+            "type": "string",
+            "description": "DAO account address"
+          },
+          "collectionAddress": {
+            "type": "string",
+            "description": "NFT collection address"
+          }
+        },
+        "required": [
+          "daoAddress",
+          "collectionAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_boost_registry",
+      "description": "Boost registry metadata for a DAO: size, hard cap (bps) and whether a collection is boosted.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "daoAddress": {
+            "type": "string",
+            "description": "DAO account address"
+          },
+          "collectionAddress": {
+            "type": "string",
+            "description": "Optional collection to check"
+          }
+        },
+        "required": [
+          "daoAddress"
+        ]
+      }
+    },
+    {
+      "name": "get_dao_script",
+      "description": "Script library entry: execution hash, source CID, args flag and audit state.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "scriptId": {
+            "type": "number",
+            "description": "Script id"
+          }
+        },
+        "required": [
+          "scriptId"
+        ]
+      }
+    },
+    {
+      "name": "list_dao_scripts",
+      "description": "Script library config and count (dao_scripts::library).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "is_script_approved",
+      "description": "Whether a DAO has allow-listed a script (dao_scripts::vault::is_approved).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "daoAddress": {
+            "type": "string",
+            "description": "DAO account address"
+          },
+          "scriptId": {
+            "type": "number",
+            "description": "Script id"
+          }
+        },
+        "required": [
+          "daoAddress",
+          "scriptId"
+        ]
+      }
+    },
+    {
+      "name": "is_token_tax_active",
+      "description": "Whether a DAO smart token currently charges transfer tax (dao_tokens::smart_token).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "Token metadata address"
+          }
+        },
+        "required": [
+          "tokenAddress"
+        ]
+      }
+    },
+    {
+      "name": "is_token_blacklisted",
+      "description": "Whether an account is blacklisted on a DAO smart token (token, account).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tokenAddress": {
+            "type": "string",
+            "description": "Token metadata address"
+          },
+          "account": {
+            "type": "string",
+            "description": "Account to check"
+          }
+        },
+        "required": [
+          "tokenAddress",
+          "account"
+        ]
+      }
+    }
+  ]
+}
