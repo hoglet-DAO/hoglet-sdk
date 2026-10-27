@@ -80,6 +80,6 @@ The pack script writes `artifacts/hoglet-agent-skills.zip` and a SHA256 checksum
 
 ## Source
 
-Canonical source: `https://github.com/hoglet-xyz/hoglet-sdk/tree/main/skills`
+Canonical source: `https://github.com/hoglet-DAO/hoglet-sdk/tree/main/skills`
 
 Documentation: `https://docs.hoglet.xyz/docs/developers/sdk` and `https://docs.hoglet.xyz/docs/developers/mcp`
